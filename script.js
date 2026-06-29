@@ -26,6 +26,7 @@ const borderWidthSlider = document.getElementById('borderWidth');
 const borderValue = document.getElementById('borderValue');
 const hatchSpacingSlider = document.getElementById('hatchSpacing');
 const spacingValue = document.getElementById('spacingValue');
+const polyBlackStroke = document.getElementById('polyBlackStroke');
 
 // Icon controls
 const iconSizeSlider = document.getElementById('iconSize');
@@ -78,12 +79,12 @@ let historyIndex = -1;
 
 // ===================== Definiciones =====================
 const alertTypes = {
-    'tornado-warning':       { name: 'Tornado Warning',          color: '#FF0000', border: '#aa0000' },
+    'tornado-warning':       { name: 'Tornado Warning',          color: '#FF0606', border: '#d10000' },
     'pds':                   { name: 'PDS Tornado Warning',      color: '#FF33FF', border: '#a300a3' },
     'tornado-emergency':     { name: 'Tornado Emergency',        color: '#A020F0', border: '#5e0a8f' },
-    'tornado-watch':         { name: 'Tornado Watch',            color: '#FF6666', border: '#cc3333' },
-    'severe-warning':        { name: 'Severe T-Storm Warning',   color: '#FFA500', border: '#cc7a00' },
-    'severe-watch':          { name: 'Severe T-Storm Watch',     color: '#FFFF00', border: '#cccc00' },
+    'tornado-watch':         { name: 'Tornado Watch',            color: '#FF0606', border: '#d10000' },
+    'severe-warning':        { name: 'Severe T-Storm Warning',   color: '#FFC113', border: '#d19a0a' },
+    'severe-watch':          { name: 'Severe T-Storm Watch',     color: '#FFE900', border: '#d1c000' },
     'extreme-wind':          { name: 'Extreme Wind Warning',     color: '#FF33A8', border: '#cc1a7a' },
     'flash-flood-warning':   { name: 'Flash Flood Warning',      color: '#00C853', border: '#00863a' },
     'flash-flood-emergency': { name: 'Flash Flood Emergency',    color: '#00E676', border: '#00a152' },
@@ -184,6 +185,7 @@ function init() {
     opacitySlider.addEventListener('input', () => { opacityValue.textContent = opacitySlider.value + '%'; applyStyleToSelectedPolygon(); });
     borderWidthSlider.addEventListener('input', () => { borderValue.textContent = borderWidthSlider.value + 'px'; applyStyleToSelectedPolygon(); });
     hatchSpacingSlider.addEventListener('input', () => { spacingValue.textContent = hatchSpacingSlider.value + 'px'; applyStyleToSelectedPolygon(); });
+    polyBlackStroke.addEventListener('change', applyStyleToSelectedPolygon);
 
     iconSizeSlider.addEventListener('input', () => { iconSizeValue.textContent = iconSizeSlider.value + 'px'; applyToSelected('size', parseInt(iconSizeSlider.value)); });
     iconLabelToggle.addEventListener('change', () => applyToSelected('showLabel', iconLabelToggle.checked));
@@ -258,7 +260,8 @@ function currentPolyStyle() {
         hatchAngle: hatchAngleSel.value,
         opacity: parseInt(opacitySlider.value) / 100,
         borderWidth: parseInt(borderWidthSlider.value),
-        spacing: parseInt(hatchSpacingSlider.value)
+        spacing: parseInt(hatchSpacingSlider.value),
+        blackStroke: polyBlackStroke.checked
     };
 }
 
@@ -341,15 +344,21 @@ function drawPolygon(obj) {
         }
     }
 
-    // Borde
-    pathPolygon(pts);
-    ctx.strokeStyle = al.border;
-    ctx.lineWidth = st.borderWidth;
+    // Borde (con trazo negro exterior opcional)
     ctx.lineJoin = 'round';
+    if (st.blackStroke) {
+        pathPolygon(pts);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = st.borderWidth + 3;
+        ctx.stroke();
+    }
+    pathPolygon(pts);
+    ctx.strokeStyle = al.color;
+    ctx.lineWidth = st.borderWidth;
     ctx.stroke();
 
     // Flechas direccionales sobre el borde
-    if (st.mode === 'arrows' && pts.length > 2) drawBorderArrows(pts, al.border);
+    if (st.mode === 'arrows' && pts.length > 2) drawBorderArrows(pts, al.color);
 
     ctx.restore();
 }
@@ -403,7 +412,7 @@ function drawDraftPolygon() {
     ctx.moveTo(draftPolygon[0].x, draftPolygon[0].y);
     for (let i = 1; i < draftPolygon.length; i++) ctx.lineTo(draftPolygon[i].x, draftPolygon[i].y);
     ctx.lineTo(mousePos.x, mousePos.y);
-    ctx.strokeStyle = al.border;
+    ctx.strokeStyle = al.color;
     ctx.lineWidth = parseInt(borderWidthSlider.value);
     ctx.setLineDash([7, 5]);
     ctx.stroke();
@@ -411,7 +420,7 @@ function drawDraftPolygon() {
     draftPolygon.forEach(p => {
         ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
         ctx.fillStyle = '#fff'; ctx.fill();
-        ctx.strokeStyle = al.border; ctx.lineWidth = 2; ctx.stroke();
+        ctx.strokeStyle = al.color; ctx.lineWidth = 2; ctx.stroke();
     });
     ctx.restore();
 }
@@ -837,6 +846,7 @@ function syncControlsFromSelection(o) {
         opacitySlider.value = Math.round(o.style.opacity * 100); opacityValue.textContent = opacitySlider.value + '%';
         borderWidthSlider.value = o.style.borderWidth; borderValue.textContent = o.style.borderWidth + 'px';
         hatchSpacingSlider.value = o.style.spacing; spacingValue.textContent = o.style.spacing + 'px';
+        polyBlackStroke.checked = !!o.style.blackStroke;
     } else if (o.kind === 'icon') {
         currentIcon = o.iconType;
         document.querySelectorAll('.icon-btn').forEach(b => b.classList.toggle('active', b.dataset.icon === o.iconType));
