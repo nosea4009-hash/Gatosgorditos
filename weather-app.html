@@ -373,19 +373,19 @@ body {
                     <h3>⚠️ Tipo de Alerta</h3>
                     <div class="alert-types">
                         <button class="alert-btn active" data-type="tornado-warning">
-                            <div class="color-box" style="background: #DC143C;"></div>
+                            <div class="color-box" style="background: #FF0000;"></div>
                             <span>Tornado WARNING</span>
                         </button>
                         <button class="alert-btn" data-type="pds">
-                            <div class="color-box" style="background: #FF00FF;"></div>
+                            <div class="color-box" style="background: #FF33FF;"></div>
                             <span>PDS Tornado WARNING</span>
                         </button>
                         <button class="alert-btn" data-type="tornado-emergency">
-                            <div class="color-box" style="background: #800080;"></div>
+                            <div class="color-box" style="background: #A020F0;"></div>
                             <span>Tornado EMERGENCY</span>
                         </button>
                         <button class="alert-btn" data-type="tornado-watch">
-                            <div class="color-box" style="background: #FF0000;"></div>
+                            <div class="color-box" style="background: #FF6666;"></div>
                             <span>Tornado WATCH</span>
                         </button>
                         <button class="alert-btn" data-type="severe-warning">
@@ -397,27 +397,31 @@ body {
                             <span>Severe T-Storm WATCH</span>
                         </button>
                         <button class="alert-btn" data-type="extreme-wind">
-                            <div class="color-box" style="background: #FF1493;"></div>
+                            <div class="color-box" style="background: #FF33A8;"></div>
                             <span>Extreme Wind WARNING</span>
                         </button>
                         <button class="alert-btn" data-type="flash-flood-warning">
-                            <div class="color-box" style="background: #8B0000;"></div>
+                            <div class="color-box" style="background: #00C853;"></div>
                             <span>Flash Flood WARNING</span>
                         </button>
                         <button class="alert-btn" data-type="flash-flood-emergency">
-                            <div class="color-box" style="background: #013220;"></div>
+                            <div class="color-box" style="background: #00E676;"></div>
                             <span>Flash Flood EMERGENCY</span>
                         </button>
                         <button class="alert-btn" data-type="flash-flood-watch">
-                            <div class="color-box" style="background: #228B22;"></div>
+                            <div class="color-box" style="background: #66BB6A;"></div>
                             <span>Flash Flood WATCH</span>
                         </button>
                         <button class="alert-btn" data-type="special-marine">
-                            <div class="color-box" style="background: #FF8C00;"></div>
+                            <div class="color-box" style="background: #FFB300;"></div>
                             <span>Special Marine WARNING</span>
                         </button>
+                        <button class="alert-btn" data-type="special-weather-stmt">
+                            <div class="color-box" style="background: #FFE4B5;"></div>
+                            <span>Special Weather Statement</span>
+                        </button>
                         <button class="alert-btn" data-type="winter-storm">
-                            <div class="color-box" style="background: #4169E1;"></div>
+                            <div class="color-box" style="background: #5B8DEF;"></div>
                             <span>Winter Storm WARNING</span>
                         </button>
                     </div>
@@ -674,18 +678,19 @@ let historyIndex = -1;
 
 // ===================== Definiciones =====================
 const alertTypes = {
-    'tornado-warning':       { name: 'Tornado Warning',          color: '#DC143C', border: '#7a0010' },
-    'pds':                   { name: 'PDS Tornado Warning',      color: '#FF00FF', border: '#7d007d' },
-    'tornado-emergency':     { name: 'Tornado Emergency',        color: '#800080', border: '#3d003d' },
-    'tornado-watch':         { name: 'Tornado Watch',            color: '#FF0000', border: '#8b0000' },
-    'severe-warning':        { name: 'Severe T-Storm Warning',   color: '#FFA500', border: '#b36b00' },
-    'severe-watch':          { name: 'Severe T-Storm Watch',     color: '#FFFF00', border: '#b3b300' },
-    'extreme-wind':          { name: 'Extreme Wind Warning',     color: '#FF1493', border: '#a30d60' },
-    'flash-flood-warning':   { name: 'Flash Flood Warning',      color: '#8B0000', border: '#4d0000' },
-    'flash-flood-emergency': { name: 'Flash Flood Emergency',    color: '#013220', border: '#001a10' },
-    'flash-flood-watch':     { name: 'Flash Flood Watch',        color: '#228B22', border: '#0f4d0f' },
-    'special-marine':        { name: 'Special Marine Warning',   color: '#FF8C00', border: '#a35a00' },
-    'winter-storm':          { name: 'Winter Storm Warning',     color: '#4169E1', border: '#1f3a8a' }
+    'tornado-warning':       { name: 'Tornado Warning',          color: '#FF0000', border: '#aa0000' },
+    'pds':                   { name: 'PDS Tornado Warning',      color: '#FF33FF', border: '#a300a3' },
+    'tornado-emergency':     { name: 'Tornado Emergency',        color: '#A020F0', border: '#5e0a8f' },
+    'tornado-watch':         { name: 'Tornado Watch',            color: '#FF6666', border: '#cc3333' },
+    'severe-warning':        { name: 'Severe T-Storm Warning',   color: '#FFA500', border: '#cc7a00' },
+    'severe-watch':          { name: 'Severe T-Storm Watch',     color: '#FFFF00', border: '#cccc00' },
+    'extreme-wind':          { name: 'Extreme Wind Warning',     color: '#FF33A8', border: '#cc1a7a' },
+    'flash-flood-warning':   { name: 'Flash Flood Warning',      color: '#00C853', border: '#00863a' },
+    'flash-flood-emergency': { name: 'Flash Flood Emergency',    color: '#00E676', border: '#00a152' },
+    'flash-flood-watch':     { name: 'Flash Flood Watch',        color: '#66BB6A', border: '#3a8c3e' },
+    'special-marine':        { name: 'Special Marine Warning',   color: '#FFB300', border: '#cc8e00' },
+    'special-weather-stmt':  { name: 'Special Weather Statement', color: '#FFE4B5', border: '#c9a86a' },
+    'winter-storm':          { name: 'Winter Storm Warning',     color: '#5B8DEF', border: '#2f5fc0' }
 };
 
 const iconDefs = {

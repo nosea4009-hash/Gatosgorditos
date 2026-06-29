@@ -78,18 +78,19 @@ let historyIndex = -1;
 
 // ===================== Definiciones =====================
 const alertTypes = {
-    'tornado-warning':       { name: 'Tornado Warning',          color: '#DC143C', border: '#7a0010' },
-    'pds':                   { name: 'PDS Tornado Warning',      color: '#FF00FF', border: '#7d007d' },
-    'tornado-emergency':     { name: 'Tornado Emergency',        color: '#800080', border: '#3d003d' },
-    'tornado-watch':         { name: 'Tornado Watch',            color: '#FF0000', border: '#8b0000' },
-    'severe-warning':        { name: 'Severe T-Storm Warning',   color: '#FFA500', border: '#b36b00' },
-    'severe-watch':          { name: 'Severe T-Storm Watch',     color: '#FFFF00', border: '#b3b300' },
-    'extreme-wind':          { name: 'Extreme Wind Warning',     color: '#FF1493', border: '#a30d60' },
-    'flash-flood-warning':   { name: 'Flash Flood Warning',      color: '#8B0000', border: '#4d0000' },
-    'flash-flood-emergency': { name: 'Flash Flood Emergency',    color: '#013220', border: '#001a10' },
-    'flash-flood-watch':     { name: 'Flash Flood Watch',        color: '#228B22', border: '#0f4d0f' },
-    'special-marine':        { name: 'Special Marine Warning',   color: '#FF8C00', border: '#a35a00' },
-    'winter-storm':          { name: 'Winter Storm Warning',     color: '#4169E1', border: '#1f3a8a' }
+    'tornado-warning':       { name: 'Tornado Warning',          color: '#FF0000', border: '#aa0000' },
+    'pds':                   { name: 'PDS Tornado Warning',      color: '#FF33FF', border: '#a300a3' },
+    'tornado-emergency':     { name: 'Tornado Emergency',        color: '#A020F0', border: '#5e0a8f' },
+    'tornado-watch':         { name: 'Tornado Watch',            color: '#FF6666', border: '#cc3333' },
+    'severe-warning':        { name: 'Severe T-Storm Warning',   color: '#FFA500', border: '#cc7a00' },
+    'severe-watch':          { name: 'Severe T-Storm Watch',     color: '#FFFF00', border: '#cccc00' },
+    'extreme-wind':          { name: 'Extreme Wind Warning',     color: '#FF33A8', border: '#cc1a7a' },
+    'flash-flood-warning':   { name: 'Flash Flood Warning',      color: '#00C853', border: '#00863a' },
+    'flash-flood-emergency': { name: 'Flash Flood Emergency',    color: '#00E676', border: '#00a152' },
+    'flash-flood-watch':     { name: 'Flash Flood Watch',        color: '#66BB6A', border: '#3a8c3e' },
+    'special-marine':        { name: 'Special Marine Warning',   color: '#FFB300', border: '#cc8e00' },
+    'special-weather-stmt':  { name: 'Special Weather Statement', color: '#FFE4B5', border: '#c9a86a' },
+    'winter-storm':          { name: 'Winter Storm Warning',     color: '#5B8DEF', border: '#2f5fc0' }
 };
 
 const iconDefs = {
