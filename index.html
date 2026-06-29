@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Severe Weather Nowcasting Studio - SPC Style</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>⚡ Severe Weather Nowcasting Studio</h1>
+                <p class="subtitle">Storm Prediction Center Style · Editor de Advertencias y Nowcasting</p>
+            </div>
+            <div class="header-actions">
+                <button id="saveProjectBtn" class="hbtn" title="Guardar proyecto (.json)">💾 Proyecto</button>
+                <input type="file" id="loadProjectInput" accept="application/json" hidden>
+                <button id="loadProjectBtn" class="hbtn" title="Cargar proyecto (.json)">📂 Cargar</button>
+                <button id="exportBtn" class="hbtn hbtn-accent" title="Exportar PNG (Ctrl+S)">🖼️ Exportar PNG</button>
+            </div>
+        </header>
+
+        <!-- Toolbar -->
+        <div class="toolbar" id="toolbar">
+            <button class="tool active" data-tool="select" title="Seleccionar / Mover (V)">🖱️<span>Selec.</span></button>
+            <button class="tool" data-tool="polygon" title="Dibujar polígono (P)">⬡<span>Polígono</span></button>
+            <button class="tool" data-tool="icon" title="Colocar icono de tormenta (I)">🌪️<span>Iconos</span></button>
+            <button class="tool" data-tool="text" title="Añadir texto (T)">📝<span>Texto</span></button>
+            <button class="tool" data-tool="motion" title="Vector de movimiento (M)">➡️<span>Movim.</span></button>
+            <button class="tool" data-tool="marker" title="Marcador de ciudad (C)">📍<span>Ciudad</span></button>
+            <button class="tool" data-tool="measure" title="Medir distancia (D)">📏<span>Medir</span></button>
+            <div class="toolbar-spacer"></div>
+            <button class="tool" id="undoBtn" title="Deshacer (Ctrl+Z)">↶<span>Deshacer</span></button>
+            <button class="tool" id="redoBtn" title="Rehacer (Ctrl+Y)">↷<span>Rehacer</span></button>
+            <button class="tool" id="deleteSelBtn" title="Eliminar selección (Supr)">🗑️<span>Eliminar</span></button>
+            <button class="tool" id="clearCanvas" title="Limpiar todo">💥<span>Limpiar</span></button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Panel - Tools -->
+            <aside class="tool-panel">
+                <div class="panel-section">
+                    <h3>📁 Imagen de Radar</h3>
+                    <div class="file-upload">
+                        <label for="imageUpload" class="upload-btn">
+                            <span>🖼️ Cargar Imagen</span>
+                            <input type="file" id="imageUpload" accept="image/png, image/jpeg, image/jpg">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Contextual panel: Alert types (polygon tool) -->
+                <div class="panel-section context-panel" data-context="polygon">
+                    <h3>⚠️ Tipo de Alerta</h3>
+                    <div class="alert-types">
+                        <button class="alert-btn active" data-type="tornado-warning">
+                            <div class="color-box" style="background: #DC143C;"></div>
+                            <span>Tornado WARNING</span>
+                        </button>
+                        <button class="alert-btn" data-type="pds">
+                            <div class="color-box" style="background: #FF00FF;"></div>
+                            <span>PDS Tornado WARNING</span>
+                        </button>
+                        <button class="alert-btn" data-type="tornado-emergency">
+                            <div class="color-box" style="background: #800080;"></div>
+                            <span>Tornado EMERGENCY</span>
+                        </button>
+                        <button class="alert-btn" data-type="tornado-watch">
+                            <div class="color-box" style="background: #FF0000;"></div>
+                            <span>Tornado WATCH</span>
+                        </button>
+                        <button class="alert-btn" data-type="severe-warning">
+                            <div class="color-box" style="background: #FFA500;"></div>
+                            <span>Severe T-Storm WARNING</span>
+                        </button>
+                        <button class="alert-btn" data-type="severe-watch">
+                            <div class="color-box" style="background: #FFFF00;"></div>
+                            <span>Severe T-Storm WATCH</span>
+                        </button>
+                        <button class="alert-btn" data-type="extreme-wind">
+                            <div class="color-box" style="background: #FF1493;"></div>
+                            <span>Extreme Wind WARNING</span>
+                        </button>
+                        <button class="alert-btn" data-type="flash-flood-warning">
+                            <div class="color-box" style="background: #8B0000;"></div>
+                            <span>Flash Flood WARNING</span>
+                        </button>
+                        <button class="alert-btn" data-type="flash-flood-emergency">
+                            <div class="color-box" style="background: #013220;"></div>
+                            <span>Flash Flood EMERGENCY</span>
+                        </button>
+                        <button class="alert-btn" data-type="flash-flood-watch">
+                            <div class="color-box" style="background: #228B22;"></div>
+                            <span>Flash Flood WATCH</span>
+                        </button>
+                        <button class="alert-btn" data-type="special-marine">
+                            <div class="color-box" style="background: #FF8C00;"></div>
+                            <span>Special Marine WARNING</span>
+                        </button>
+                        <button class="alert-btn" data-type="winter-storm">
+                            <div class="color-box" style="background: #4169E1;"></div>
+                            <span>Winter Storm WARNING</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Contextual panel: Polygon style -->
+                <div class="panel-section context-panel" data-context="polygon">
+                    <h3>🎨 Estética del Polígono</h3>
+                    <label class="field-label" for="polyStyleSelect">Estilo de relleno</label>
+                    <select id="polyStyleSelect" class="select-input">
+                        <option value="outline">Solo contorno</option>
+                        <option value="lines">Líneas negras internas</option>
+                        <option value="hatch" selected>Hatch (relleno + líneas)</option>
+                        <option value="solid">Relleno sólido</option>
+                        <option value="arrows">Borde con flechas</option>
+                    </select>
+
+                    <label class="field-label" for="hatchAngle">Ángulo de líneas/hatch</label>
+                    <select id="hatchAngle" class="select-input">
+                        <option value="-45" selected>Diagonal ↘ (-45°)</option>
+                        <option value="45">Diagonal ↗ (45°)</option>
+                        <option value="0">Horizontal</option>
+                        <option value="90">Vertical</option>
+                        <option value="cross">Cruzado (cross-hatch)</option>
+                    </select>
+
+                    <label class="slider-row">
+                        <span>Opacidad: <b id="opacityValue">40%</b></span>
+                        <input type="range" id="opacity" min="0" max="90" value="40">
+                    </label>
+                    <label class="slider-row">
+                        <span>Grosor borde: <b id="borderValue">3px</b></span>
+                        <input type="range" id="borderWidth" min="1" max="8" value="3">
+                    </label>
+                    <label class="slider-row">
+                        <span>Densidad líneas: <b id="spacingValue">7px</b></span>
+                        <input type="range" id="hatchSpacing" min="4" max="16" value="7">
+                    </label>
+                </div>
+
+                <!-- Contextual panel: Storm icons -->
+                <div class="panel-section context-panel" data-context="icon" hidden>
+                    <h3>🌩️ Iconos de Severidad</h3>
+                    <div class="icon-grid">
+                        <button class="icon-btn active" data-icon="tornado" title="Tornado">🌪️<span>Tornado</span></button>
+                        <button class="icon-btn" data-icon="hail" title="Granizo">🧊<span>Granizo</span></button>
+                        <button class="icon-btn" data-icon="wind" title="Viento">💨<span>Viento</span></button>
+                        <button class="icon-btn" data-icon="storm" title="Tormenta">⛈️<span>Tormenta</span></button>
+                        <button class="icon-btn" data-icon="rain" title="Lluvia">🌧️<span>Lluvia</span></button>
+                        <button class="icon-btn" data-icon="lightning" title="Rayo">⚡<span>Rayo</span></button>
+                        <button class="icon-btn" data-icon="funnel" title="Funnel cloud">🌀<span>Funnel</span></button>
+                        <button class="icon-btn" data-icon="flood" title="Inundación">🌊<span>Inundación</span></button>
+                        <button class="icon-btn" data-icon="snow" title="Nieve">❄️<span>Nieve</span></button>
+                    </div>
+                    <label class="slider-row">
+                        <span>Tamaño icono: <b id="iconSizeValue">42px</b></span>
+                        <input type="range" id="iconSize" min="20" max="90" value="42">
+                    </label>
+                    <label class="check-row">
+                        <input type="checkbox" id="iconLabelToggle">
+                        <span>Mostrar etiqueta bajo el icono</span>
+                    </label>
+                </div>
+
+                <!-- Contextual panel: Text -->
+                <div class="panel-section context-panel" data-context="text" hidden>
+                    <h3>📝 Texto / Etiqueta</h3>
+                    <label class="field-label" for="textInput">Contenido</label>
+                    <input type="text" id="textInput" class="text-input" placeholder="Ej: 60 dBZ / Rotación fuerte">
+                    <label class="slider-row">
+                        <span>Tamaño: <b id="textSizeValue">18px</b></span>
+                        <input type="range" id="textSize" min="10" max="60" value="18">
+                    </label>
+                    <label class="field-label" for="textColor">Color</label>
+                    <input type="color" id="textColor" class="color-pick" value="#ffffff">
+                    <label class="check-row">
+                        <input type="checkbox" id="textHalo" checked>
+                        <span>Contorno negro (legibilidad)</span>
+                    </label>
+                </div>
+
+                <!-- Contextual panel: Motion vector -->
+                <div class="panel-section context-panel" data-context="motion" hidden>
+                    <h3>➡️ Vector de Movimiento</h3>
+                    <p class="hint">Haz clic en el origen de la tormenta y luego en su destino para trazar la dirección.</p>
+                    <label class="field-label" for="motionSpeed">Velocidad (km/h)</label>
+                    <input type="number" id="motionSpeed" class="text-input" value="55" min="0" max="200">
+                    <label class="field-label" for="motionColor">Color</label>
+                    <input type="color" id="motionColor" class="color-pick" value="#ffffff">
+                </div>
+
+                <!-- Contextual panel: Marker -->
+                <div class="panel-section context-panel" data-context="marker" hidden>
+                    <h3>📍 Marcador de Ciudad</h3>
+                    <label class="field-label" for="markerInput">Nombre de la ciudad</label>
+                    <input type="text" id="markerInput" class="text-input" placeholder="Ej: Oklahoma City">
+                </div>
+
+                <!-- Contextual panel: Measure -->
+                <div class="panel-section context-panel" data-context="measure" hidden>
+                    <h3>📏 Medir Distancia</h3>
+                    <label class="field-label" for="kmPerPixel">Escala (km por píxel)</label>
+                    <input type="number" id="kmPerPixel" class="text-input" value="1" min="0.01" step="0.1">
+                    <p class="hint">Ajusta la escala según tu radar. Haz clic en dos puntos para medir.</p>
+                </div>
+
+                <!-- Layers panel -->
+                <div class="panel-section">
+                    <h3>🗂️ Capas / Objetos</h3>
+                    <ul id="layersList" class="layers-list">
+                        <li class="layers-empty">Sin objetos todavía.</li>
+                    </ul>
+                </div>
+
+                <!-- Overlays -->
+                <div class="panel-section">
+                    <h3>🧭 Superposiciones</h3>
+                    <label class="check-row">
+                        <input type="checkbox" id="toggleGrid">
+                        <span>Cuadrícula de referencia</span>
+                    </label>
+                    <label class="check-row">
+                        <input type="checkbox" id="toggleLegend" checked>
+                        <span>Leyenda automática</span>
+                    </label>
+                    <label class="check-row">
+                        <input type="checkbox" id="toggleBanner" checked>
+                        <span>Banner de información</span>
+                    </label>
+                </div>
+
+                <!-- Info banner editor -->
+                <div class="panel-section">
+                    <h3>📰 Banner de Información</h3>
+                    <label class="field-label" for="bannerTitle">Título</label>
+                    <input type="text" id="bannerTitle" class="text-input" value="SEVERE WEATHER OUTLOOK">
+                    <label class="field-label" for="bannerOffice">Oficina / Fuente</label>
+                    <input type="text" id="bannerOffice" class="text-input" value="NWS / SPC">
+                    <label class="field-label" for="bannerValid">Válido hasta</label>
+                    <input type="text" id="bannerValid" class="text-input" value="">
+                </div>
+            </aside>
+
+            <!-- Canvas Area -->
+            <div class="canvas-area">
+                <div class="canvas-header">
+                    <h3 id="canvasTitle">Lienzo de Edición</h3>
+                    <div class="canvas-info">
+                        <span id="toolStatus">Herramienta: Seleccionar</span>
+                        <span id="cursorCoords">X: 0, Y: 0</span>
+                        <span id="polygonCount">Objetos: 0</span>
+                    </div>
+                </div>
+                <div class="canvas-wrapper" id="canvasWrapper">
+                    <canvas id="radarCanvas"></canvas>
+                    <div id="dropZone" class="drop-zone">
+                        <div class="drop-zone-content">
+                            <div class="drop-icon">🛰️</div>
+                            <p>Arrastra una imagen de radar aquí</p>
+                            <p class="drop-subtext">o usa el botón "Cargar Imagen"</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="canvas-footer">
+                    <span id="hintBar">Consejo: selecciona una herramienta arriba para empezar. Doble clic o Enter cierra un polígono.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>⚡ Severe Weather Nowcasting Studio v2.0 · Inspirado en NOAA Storm Prediction Center</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
